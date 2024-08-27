@@ -1,0 +1,87 @@
+import speech_recognition as sr            #Voice assistant (Jarvis)
+import pyttsx3
+import openai
+import datetime
+
+# Initialize the text-to-speech engine
+engine = pyttsx3.init()
+
+# Function to convert text to speech
+def speak(text):
+    engine.say(text)
+    engine.runAndWait()
+
+# Function to recognize speech and convert it to text
+def listen():
+    recognizer = sr.Recognizer()
+    with sr.Microphone() as source:
+        print("Listening...")
+        audio = recognizer.listen(source)
+    try:
+        print("Recognizing...")
+        command = recognizer.recognize_google(audio)
+        print(f"User said: {command}\n")
+    except sr.UnknownValueError:
+        print("Sorry, I did not get that")
+        return ""
+    except sr.RequestError:
+        print("Sorry, my speech service is down")
+        return ""
+    return command
+
+# OpenAI API key 
+openai.api_key = 'sk-proj-WsZ9VWxGow8wPp0XDpbAT3BlbkFJgEWllRiXOyCBvC5VsFOY'
+
+# Function to get a response from OpenAI GPT
+def get_response(prompt):
+    response = openai.Completion.create(
+        engine="text-davinci-003",
+        prompt=prompt,
+        max_tokens=150
+    )
+    return response.choices[0].text.strip()
+
+# Function to get the current time
+def get_time():
+    now = datetime.datetime.now().strftime("%I:%M %p")
+    return f"The current time is {now}"
+
+# Function to get the current date
+def get_date():
+    today = datetime.datetime.now().strftime("%B %d, %Y")
+    return f"Today's date is {today}"
+
+# Main function
+def main():
+    speak("Hello sir, I am Jarvis. How can I assist you today sir?")
+    while True:
+        command = listen().lower()
+        
+        if "hello jarvis" in command or "hey there buddy" in command:
+            speak("Hello sir, how are you ?")
+            speak("Hope you are doing fine!")
+        
+        if "goodbye" in command or "stop" in command:
+            speak("Have a nice day sir!")
+            speak("You are the best!")
+            break
+        
+        if "where do i live" in command or "tell my location" in command:
+            speak("You live in Prayagraj")
+            speak(" beli road new katra")
+        
+        elif "time" in command:
+            response = get_time()
+       
+        elif "date" in command:
+            response = get_date()
+       
+        else:
+            # Always respond favorably for other commands
+            response = get_response(f"{command}. And please respond favorably.")
+        
+        print(f"Jarvis: {response}")
+        speak(response)
+
+if __name__ == "__main__":
+    main()
