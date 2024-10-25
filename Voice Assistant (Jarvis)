@@ -3,15 +3,14 @@ import pyttsx3
 import openai
 import datetime
 
-# Initialize the text-to-speech engine
+
 engine = pyttsx3.init()
 
-# Function to convert text to speech
+
 def speak(text):
     engine.say(text)
     engine.runAndWait()
 
-# Function to recognize speech and convert it to text
 def listen():
     recognizer = sr.Recognizer()
     with sr.Microphone() as source:
@@ -30,9 +29,8 @@ def listen():
     return command
 
 # OpenAI API key 
-openai.api_key = 'sk-proj-WsZ9VWxGow8wPp0XDpbAT3BlbkFJgEWllRiXOyCBvC5VsFOY'
+openai.api_key = '#' # Use your own api key 
 
-# Function to get a response from OpenAI GPT
 def get_response(prompt):
     response = openai.Completion.create(
         engine="text-davinci-003",
@@ -41,17 +39,16 @@ def get_response(prompt):
     )
     return response.choices[0].text.strip()
 
-# Function to get the current time
+
 def get_time():
     now = datetime.datetime.now().strftime("%I:%M %p")
     return f"The current time is {now}"
 
-# Function to get the current date
+
 def get_date():
     today = datetime.datetime.now().strftime("%B %d, %Y")
     return f"Today's date is {today}"
 
-# Main function
 def main():
     speak("Hello sir, I am Jarvis. How can I assist you today sir?")
     while True:
